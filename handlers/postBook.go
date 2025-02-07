@@ -15,7 +15,7 @@ type Book struct {
 	Author   string `json:"author"`
 }
 
-
+//all books array
 var AllBooks=[]Book {}
 
 func PostBook(w http.ResponseWriter,req *http.Request){
