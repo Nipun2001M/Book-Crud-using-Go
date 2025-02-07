@@ -23,6 +23,7 @@ func main() {
 	router.HandleFunc("/books",handlers.PostBook).Methods("POST")
 	router.HandleFunc("/books/{id}",handlers.UpdateBook).Methods("PUT")
 	router.HandleFunc("/books/{id}",handlers.DeleteBook).Methods("DELETE")
+	router.HandleFunc("/externalbooks",handlers.GetBooksFromExternal).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8080",router))
 	fmt.Println("server runing....")
 
