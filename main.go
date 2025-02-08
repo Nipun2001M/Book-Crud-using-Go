@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
 	"restapi/handlers"
-
 	"github.com/gorilla/mux"
 )
 
