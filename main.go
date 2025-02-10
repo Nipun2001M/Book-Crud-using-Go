@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"restapi/handlers/channel"
 	"restapi/handlers"
+	"restapi/handlers/channel"
 	"restapi/redis"
+	"sync"
+
 	"github.com/gorilla/mux"
 )
 
@@ -18,7 +20,9 @@ import (
 
 
 func main() {
-	go channel.Listener()
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go channel.Listener(&wg)
 	redis.RedisConnection()
 	router:=mux.NewRouter()
 	router.HandleFunc("/books",handlers.GetAllBooks).Methods("GET")
@@ -29,6 +33,7 @@ func main() {
 	router.HandleFunc("/externalbooks",handlers.GetBooksFromExternal).Methods("GET")
 	fmt.Println("server runing....")
 	log.Fatal(http.ListenAndServe(":8080",router))
+	wg.Wait()
 
 
 	
