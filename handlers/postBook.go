@@ -4,15 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-
+	"restapi/redis"
 	"github.com/google/uuid"
 )
 
 
 type Book struct {
-	BookID   int    `json:"bookId"`
-	BookName string `json:"bookName"`
-	Author   string `json:"author"`
+	BookID   int    `json:"bookId" redis:"bookId"`
+	BookName string `json:"bookName" redis:"bookName"`
+	Author   string `json:"author" redis:"author"`
 }
 
 //all books array
@@ -46,9 +46,27 @@ func PostBook(w http.ResponseWriter,req *http.Request){
 	}
 	json.NewEncoder(w).Encode(response)
 
+	data,err:=json.Marshal(book)
+	var errorredis error=redis.Client.SAdd(redis.Ctx,"BookSet",data,0).Err()
+
+	if errorredis!=nil{
+		http.Error(w,"eror occured in adding to redis hash",http.StatusBadRequest)
+	}
+
+	
+	
+
+
+
+
+	
+
 
 
 
 
 
 }
+
+
+
