@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"restapi/redis"
 	"github.com/google/uuid"
+	"restapi/handlers/channel"
+
 )
 
 
@@ -22,9 +24,6 @@ func PostBook(w http.ResponseWriter,req *http.Request){
 
 	var book Book;
 	err:=json.NewDecoder(req.Body).Decode(&book)
-	fmt.Println("Request Body:", req.Body)
-
-	fmt.Println("book",book)
 	book.BookID=uuid.New().ClockSequence();
 	
 	if err != nil  {
@@ -36,8 +35,6 @@ func PostBook(w http.ResponseWriter,req *http.Request){
 		return
 	}	
 
-
-
 	AllBooks = append(AllBooks, book)
 	w.Header().Set("Content-Type","application/json")
 	w.WriteHeader(http.StatusCreated)
@@ -45,7 +42,9 @@ func PostBook(w http.ResponseWriter,req *http.Request){
 		"message":"book added sucessfully",
 	}
 	json.NewEncoder(w).Encode(response)
-
+	fmt.Println(book.BookID)
+	msg:=fmt.Sprintf("/books - Book ID :%d",book.BookID)
+	channel.AddToChannel("POST",msg)
 	data,err:=json.Marshal(book)
 	var errorredis error=redis.Client.SAdd(redis.Ctx,"BookSet",data,0).Err()
 
@@ -53,16 +52,9 @@ func PostBook(w http.ResponseWriter,req *http.Request){
 		http.Error(w,"eror occured in adding to redis hash",http.StatusBadRequest)
 	}
 
-	
-	
-
-
-
 
 	
-
-
-
+	
 
 
 

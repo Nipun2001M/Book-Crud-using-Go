@@ -2,8 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
+	"restapi/handlers/channel"
 	"github.com/gorilla/mux"
 )
 
@@ -49,6 +51,9 @@ func UpdateBook(w http.ResponseWriter, req *http.Request) {
 	response := map[string]string{
 		"message": "sucessfully updated",
 	}
+	
+	msg:=fmt.Sprintf("/books - Book ID :%d",book.BookID)
+	channel.AddToChannel("PUT",msg)
 	json.NewEncoder(w).Encode(response)
 
 }

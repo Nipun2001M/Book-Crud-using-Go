@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"restapi/handlers/channel"
 	"restapi/redis"
 )
 
@@ -24,7 +25,7 @@ func GetAllBooks(w http.ResponseWriter, req *http.Request) {
 			booksStruct = append(booksStruct, book)
 		}
 	}
-
+	channel.AddToChannel("GET","/books - All Books Taken")
 	json.NewEncoder(w).Encode(booksStruct)
 
 }

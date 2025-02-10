@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"restapi/handlers/channel"
 	"restapi/handlers"
 	"restapi/redis"
 	"github.com/gorilla/mux"
@@ -17,7 +18,7 @@ import (
 
 
 func main() {
-
+	go channel.Listener()
 	redis.RedisConnection()
 	router:=mux.NewRouter()
 	router.HandleFunc("/books",handlers.GetAllBooks).Methods("GET")
