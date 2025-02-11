@@ -24,6 +24,7 @@ func main() {
 	wg.Add(1)
 	go channel.Listener(&wg)
 	redis.RedisConnection()
+	go redis.PeriodicFunction()
 	router:=mux.NewRouter()
 	router.HandleFunc("/books",handlers.GetAllBooks).Methods("GET")
 	router.HandleFunc("/books/{id}",handlers.GetSpecificBook).Methods("GET")

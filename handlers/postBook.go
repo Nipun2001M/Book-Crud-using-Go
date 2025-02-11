@@ -45,8 +45,13 @@ func PostBook(w http.ResponseWriter,req *http.Request){
 	fmt.Println(book.BookID)
 	msg:=fmt.Sprintf("/books - Book ID :%d",book.BookID)
 	channel.AddToChannel("POST",msg)
-	data,err:=json.Marshal(book)
-	var errorredis error=redis.Client.SAdd(redis.Ctx,"BookSet",data,0).Err()
+	// data,err:=json.Marshal(book)
+	key:=fmt.Sprintf("Book:%d",book.BookID)
+	errorredis := redis.Client.HSet(redis.Ctx, key, map[string]interface{}{
+		"bookId":   book.BookID,
+		"bookName": book.BookName,
+		"author":   book.Author,
+	}).Err()
 
 	if errorredis!=nil{
 		http.Error(w,"eror occured in adding to redis hash",http.StatusBadRequest)
